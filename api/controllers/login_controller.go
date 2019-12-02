@@ -10,14 +10,12 @@ import (
 	"github.com/NguyenHuy1812/forum/api/auth"
 	"github.com/NguyenHuy1812/forum/api/models"
 	"github.com/NguyenHuy1812/forum/api/security"
-	"github.com/NguyenHuy1812/forum/api/utils/formaterror"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func (server *Server) Login(c *gin.Context) {
 
 	//clear previous error if any
-	errList = map[string]string{}
 
 	body, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
@@ -28,32 +26,12 @@ func (server *Server) Login(c *gin.Context) {
 		return
 	}
 	user := models.User{}
-	err = json.Unmarshal(body, &user)
-	if err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{
-			"status": http.StatusUnprocessableEntity,
-			"error":  "Cannot unmarshal body",
-		})
-		return
-	}
+	json.Unmarshal(body, &user)
+	
 	user.Prepare()
-	errorMessages := user.Validate("login")
-	if len(errorMessages) > 0 {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{
-			"status": http.StatusUnprocessableEntity,
-			"error":  errorMessages,
-		})
-		return
-	}
-	userData, err := server.SignIn(user.Email, user.Password)
-	if err != nil {
-		formattedError := formaterror.FormatError(err.Error())
-		c.JSON(http.StatusUnprocessableEntity, gin.H{
-			"status": http.StatusUnprocessableEntity,
-			"error":  formattedError,
-		})
-		return
-	}
+	
+	userData, _ := server.SignIn(user.Email, user.Password)
+	
 	c.JSON(http.StatusOK, gin.H{
 		"status":   http.StatusOK,
 		"response": userData,
@@ -86,7 +64,6 @@ func (server *Server) SignIn(email, password string) (map[string]interface{}, er
 	userData["token"] = token
 	userData["id"] = user.ID
 	userData["email"] = user.Email
-	userData["avatar_path"] = user.AvatarPath
 	userData["username"] = user.Username
 
 	return userData, nil

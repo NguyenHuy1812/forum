@@ -35,5 +35,5 @@ func Run() {
 	fmt.Printf("Listening to port %s", apiPort)
 
 	server.Run(apiPort)
-
+	
 }

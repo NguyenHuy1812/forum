@@ -20,9 +20,10 @@ var errList = make(map[string]string)
 
 func (server *Server) Initialize(Dbdriver, DbUser, DbPassword, DbPort, DbHost, DbName string) {
 	var err error
-	// if DBdriver here to change if using another database ( mongoDB / mysql.....)
+// Tạo if để nếu cần kết nối với 2 database khác nhau ( mysql - mongodb....)
 	if Dbdriver == "postgres" {
 		DBURL := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", DbHost, DbPort, DbUser, DbName, DbPassword)
+		fmt.Println("the DBURRL",DBURL)
 		server.DB, err = gorm.Open(Dbdriver, DBURL)
 		if err != nil {
 			fmt.Printf("Cannot connect to %s database", Dbdriver)
