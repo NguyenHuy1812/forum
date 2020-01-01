@@ -41,10 +41,10 @@ func Run(){
 		fmt.Println(err)
 	}
 	fmt.Println(elastic.Version)
-	// fmt.Println(Body(mappings))
+	fmt.Println(Body(mappings))
 	ctx := context.Background()
 	fmt.Println(ctx)
-	// // create, err := es.CreateIndex(index).BodyString(mappings).Do(ctx)
+	create, err := es.CreateIndex(index).BodyString(mappings).Do(ctx)
 	// if err != nil {
 	// log.Fatalf("CreateIndex() ERROR: %v", err)
 	// } else {
